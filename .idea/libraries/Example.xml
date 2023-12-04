@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Example">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/CW1Setup/src/Example/jlayer1.0.1.zip!/" />
+      <root url="jar://$PROJECT_DIR$/CW1Setup/src/Example/jl1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
