@@ -34,5 +34,9 @@ public class ImageUtil
 		images.put("UI-background", GameUtil.getImage("example/UI-background.png"));
 		images.put("game-scene-01", GameUtil.getImage("example/game-scene-01.jpg"));
 		images.put("game-start-scene" , GameUtil.getImage("example/1629702755362_84a39ede3284dfcaa71703c98647a8f5.jpg"));
+		images.put("brick-1", GameUtil.getImage("example/1.png"));
+		images.put("brick-2", GameUtil.getImage("example/2.png"));
+		images.put("brick-3", GameUtil.getImage("example/3.png"));
+
 	}
 }

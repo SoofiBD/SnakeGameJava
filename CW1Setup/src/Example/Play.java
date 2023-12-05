@@ -30,6 +30,10 @@ public class Play extends JFrame implements KeyListener {
 	private java.util.List<PlayerScore> highScore = new ArrayList<>();
 	private static final String HIGH_SCORE_FILE = "highscores.properties";
 
+	private java.util.List<Rectangle> obstacles;
+	private int selectedLevel = 1;
+
+
 
 	public Play() {
 		loadHighScore();
@@ -155,6 +159,7 @@ public class Play extends JFrame implements KeyListener {
 					g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
 					g.setColor(Color.MAGENTA);
 					g.drawString("Score: " + snake.score, 20, 40);
+					drawObstacles(g); // burası mı bilmiyorum
 				} else if (snake.getScore() > 0) {
 					g.drawImage(gameOverImage, 0, 0, this.getWidth(), this.getHeight(), this);
 					checkAndAddHighscore();
@@ -185,17 +190,81 @@ public class Play extends JFrame implements KeyListener {
 
 		timer = new Timer(DELAY, e -> gameUpdate());
 		timer.start();
+
+
+		selectLevel();
+	}
+
+	private void selectLevel() {
+		String[] options = {"Level 1", "Level 2", "Level 3"};
+		int choice = JOptionPane.showOptionDialog(null, "Select the Level", "Level Selection",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+		if (choice != -1) {
+			selectedLevel = choice + 1;
+			loadObstaclesForLevel(selectedLevel);
+			//startGame();
+		} else {
+			System.exit(0);
+		}
+	}
+
+	private void startLevel(int level) {
+		switch (level) {
+			case 2:
+				loadObstaclesForLevel(2);
+				break;
+			case 3:
+				loadObstaclesForLevel(3);
+				break;
+			default:
+				loadObstaclesForLevel(1);
+				break;
+		}
+		startGame();
+	}
+
+	private void loadObstaclesForLevel(int level) {
+		obstacles = new ArrayList<>();
+		Random random = new Random();
+		int numberOfObstacles = 10;
+		for (int i = 0; i < numberOfObstacles; i++) {
+
+			int x = random.nextInt(800 / 20) * 20;
+			int y = random.nextInt(600 / 20) * 20;
+			obstacles.add(new Rectangle(x, y, 20, 20));
+		}
+	}
+
+	private void checkCollisionWithObstacles() {
+		Rectangle snakeHead = snake.getHead();
+		for (Rectangle obstacle : obstacles) {
+			if (snakeHead.intersects(obstacle)) {
+				isRunning = false;
+				stopGame();
+				return;
+			}
+		}
+	}
+
+	private void drawObstacles(Graphics g) {
+		for (Rectangle obstacle : obstacles) {
+			Image obstacleImage = ImageUtil.images.get("brick-" + selectedLevel); // Seviyeye göre engel görüntüsü
+			g.drawImage(obstacleImage, obstacle.x, obstacle.y, this);
+		}
 	}
 
 	private void gameUpdate() {
 		if (isRunning && !isPaused) {
 			snake.move();
 			checkCollision();
+			checkCollisionWithObstacles();
 			gamePanel.repaint();
 		}
 	}
 
 	private void startGame() {
+		selectLevel();
 		isRunning = true;
 		isPaused = false;
 		snake.reset();
